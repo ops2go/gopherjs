@@ -1,10 +1,10 @@
 FROM golang as builder
 
-RUN go get github.com/gopherjs/gopherjs.github.io/playground
+RUN go get -d -v github.com/gopherjs/gopherjs.github.io/playground
 
 WORKDIR /go/src/github.com/gopherjs/gopherjs.github.io/playground
 
-RUN CGO_ENABLED=0 GOOS=linux go generate -a -installsuffix cgo gopherjs .
+RUN CGO_ENABLED=0 GOOS=linux go generate .
 
 FROM alpine:latest
 
@@ -16,6 +16,6 @@ ENV PATH=$PATH:/gopherjs
 
 EXPOSE 8080
 
-COPY --from=builder /go/src/github.com/gopherjs/gopherjs.github.io/playground .
+COPY --from=builder /go/src/github.com/gopherjs/gopherjs.github.io/playground    .
 
 ENTRYPOINT [ "gopherjs serve" ] 
